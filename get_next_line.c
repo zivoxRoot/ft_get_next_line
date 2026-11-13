@@ -6,7 +6,7 @@
 /*   By: tdefeche <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/13 10:46:15 by tdefeche          #+#    #+#             */
-/*   Updated: 2026/11/13 11:37:37 by tdefeche         ###   ########.fr       */
+/*   Updated: 2026/11/13 11:52:45 by tdefeche         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,86 @@ char    *ft_strjoin(char const *s1, char const *s2)
 	return (res);
 }
 
+char    *ft_strchr(const char *s, int c)
+{
+	int     index;
+
+	index = 0;
+	if (!s)
+		return (NULL);
+	while (1 == 1)
+	{
+		if (s[index] == (char)c)
+			return ((char *)&(s[index]));
+		if (s[index] == '\0')
+			break ;
+		index++;
+	}
+	return (NULL);
+}
+
+char    *ft_strdup(const char *s)
+{
+	size_t  size;
+	char    *res;
+	size_t  i;
+
+	size = ft_strlen(s) + 1;
+	res = (char *)malloc(size);
+	if (!res)
+		return (NULL);
+	i = 0;
+	while (i < size)
+	{
+		res[i] = s[i];
+		i++;
+	}
+	return (res);
+}
+
+char    *ft_substr(char const *s, unsigned int start, size_t len)
+{
+	char    *res;
+	size_t  i;
+	size_t  s_len;
+
+	if (!s)
+		return (NULL);
+	s_len = ft_strlen(s);
+	if (start >= s_len)
+		return (ft_strdup(""));
+	if (len > s_len - start)
+		len = s_len - start;
+	res = (char *)malloc((len + 1) * sizeof(char));
+	if (!res)
+		return (NULL);
+	i = 0;
+	while (i < len)
+	{
+		res[i] = s[start + i];
+		i++;
+	}
+	res[i] = '\0';
+	return (res);
+}
+
+int	ft_index_of(const char *s, int c)
+{
+	int     index;
+
+	index = 0;
+	if (!s)
+		return (-1);
+	while (1 == 1)
+	{
+		if (s[index] == (char)c)
+			return (index);
+		if (s[index] == '\0')
+			break ;
+		index++;
+	}
+	return (-1);
+}
 //// END HELP
 
 char	*get_next_line(int fd)
@@ -71,13 +151,19 @@ char	*get_next_line(int fd)
 	static char	*stash;
 	char		*buffer;
 	int			byte_read;
+	char		*tmp;
 
 	buffer = (char *)malloc(BUFFER_SIZE + 1);
-	byte_read = read(fd, buffer, BUFFER_SIZE);
-	buffer[byte_read] = '\0';
-	stash = ft_strjoin((const char *)stash, (const char *)buffer);
+	while (!ft_strchr(stash, '\n') || byte_read == 0)
+	{
+		byte_read = read(fd, buffer, BUFFER_SIZE);
+		buffer[byte_read] = '\0';
+		stash = ft_strjoin((const char *)stash, (const char *)buffer);
+	}
 	free(buffer);
-	return (stash);
+	tmp = ft_substr(stash, 0, ft_index_of(stash, '\n') + 1);
+	stash = ft_substr(stash, ft_index_of(stash, '\n') + 1, ft_strlen(stash) - ft_strlen(tmp));
+	return (tmp);
 }
 
 int	main(void)
@@ -86,7 +172,7 @@ int	main(void)
 
 	fd = open("test.txt", O_RDONLY);
 
-	printf("%s\n", get_next_line(fd));
+	printf("%s\n", get_next_line(0));
 
 	close(fd);
 	return (0);
