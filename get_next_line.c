@@ -6,7 +6,7 @@
 /*   By: tdefeche <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/13 10:46:15 by tdefeche          #+#    #+#             */
-/*   Updated: 2026/11/13 11:52:45 by tdefeche         ###   ########.fr       */
+/*   Updated: 2026/11/13 13:10:17 by tdefeche         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <stdio.h>
+
+#include "get_next_line.h"
 
 ///// HELP
 size_t  ft_strlen(const char *s)
@@ -166,13 +168,23 @@ char	*get_next_line(int fd)
 	return (tmp);
 }
 
-int	main(void)
+int	main(int argc, char **argv)
 {
-	int fd;
+	int 	fd;
+	char	*str;
 
-	fd = open("test.txt", O_RDONLY);
+	if (argc == 1)
+		fd = 0;
+	else
+		fd = open(argv[1], O_RDONLY);
 
-	printf("%s\n", get_next_line(0));
+	str = get_next_line(fd);
+	while (1 == 1)
+	{
+		printf("%s", str);
+		sleep(1);
+		str = get_next_line(fd);
+	}
 
 	close(fd);
 	return (0);
