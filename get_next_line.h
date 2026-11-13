@@ -5,14 +5,16 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: tdefeche <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/11/09 12:10:11 by tdefeche          #+#    #+#             */
-/*   Updated: 2026/11/09 12:10:12 by tdefeche         ###   ########.fr       */
+/*   Created: 2026/11/13 11:10:45 by tdefeche          #+#    #+#             */
+/*   Updated: 2026/11/13 11:11:21 by tdefeche         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE
-# define GET_NEXT_LINE
+
+#ifndef GET_NEXT_LINE_H
+# define GET_NEXT_LINE_H
+# define BUFFER_SIZE = 1024
 
 char	*get_next_line(int fd);
 
-#endif
+# endif
