@@ -59,10 +59,14 @@ char    *ft_strjoin(char const *s1, char const *s2)
 	size_s2 = ft_strlen(s2);
 	res = (char *)malloc((size_s1 + size_s2 + 1) * sizeof(char));
 	if (!res)
+	{
+		free(s1);
 		return (NULL);
+	}	
 	ft_memcpy(res, s1, size_s1);
 	ft_memcpy(res + size_s1, s2, size_s2);
 	res[size_s1 + size_s2] = '\0';
+	free(s1);
 	return (res);
 }
 
@@ -156,9 +160,18 @@ char	*get_next_line(int fd)
 	char		*tmp;
 
 	buffer = (char *)malloc(BUFFER_SIZE + 1);
-	while (!ft_strchr(stash, '\n') || byte_read == 0)
+	if (!buffer)
+		return (NULL);
+	byte_read = 1;
+	while (!ft_strchr(stash, '\n') && byte_read > 0)
 	{
 		byte_read = read(fd, buffer, BUFFER_SIZE);
+		if (byte_read == -1)
+		{
+			free(buffer);
+			free(stash);
+			return (NULL);
+		}
 		buffer[byte_read] = '\0';
 		stash = ft_strjoin((const char *)stash, (const char *)buffer);
 	}
@@ -176,14 +189,21 @@ int	main(int argc, char **argv)
 	if (argc == 1)
 		fd = 0;
 	else
+	{
 		fd = open(argv[1], O_RDONLY);
+		if (fd < 0)
+		{
+			printf("Error opening file\n");
+			return (1);
+		}
+	}
 
 	str = get_next_line(fd);
-	while (1 == 1)
+	while ((str == get_next_line(fd)))
 	{
 		printf("%s", str);
+		free(str);
 		sleep(1);
-		str = get_next_line(fd);
 	}
 
 	close(fd);
