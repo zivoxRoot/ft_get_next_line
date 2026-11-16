@@ -6,7 +6,7 @@
 /*   By: tdefeche <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/13 10:46:15 by tdefeche          #+#    #+#             */
-/*   Updated: 2026/11/13 13:19:23 by tdefeche         ###   ########.fr       */
+/*   Updated: 2026/11/16 09:41:16 by tdefeche         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,14 +59,19 @@ char    *ft_strjoin(char const *s1, char const *s2)
 	size_s2 = ft_strlen(s2);
 	res = (char *)malloc((size_s1 + size_s2 + 1) * sizeof(char));
 	if (!res)
-	{
-		free(s1);
 		return (NULL);
-	}	
-	ft_memcpy(res, s1, size_s1);
+	// ft_memcpy(res, s1, size_s1);
+	// int	i;
+
+	// i = 0;
+	// while (i < size_s1)
+	// {
+	// 	*res = *s1;
+	// 	i++;
+	// }
 	ft_memcpy(res + size_s1, s2, size_s2);
 	res[size_s1 + size_s2] = '\0';
-	free(s1);
+	// free(s1);
 	return (res);
 }
 
@@ -88,25 +93,6 @@ char    *ft_strchr(const char *s, int c)
 	return (NULL);
 }
 
-char    *ft_strdup(const char *s)
-{
-	size_t  size;
-	char    *res;
-	size_t  i;
-
-	size = ft_strlen(s) + 1;
-	res = (char *)malloc(size);
-	if (!res)
-		return (NULL);
-	i = 0;
-	while (i < size)
-	{
-		res[i] = s[i];
-		i++;
-	}
-	return (res);
-}
-
 char    *ft_substr(char const *s, unsigned int start, size_t len)
 {
 	char    *res;
@@ -117,7 +103,7 @@ char    *ft_substr(char const *s, unsigned int start, size_t len)
 		return (NULL);
 	s_len = ft_strlen(s);
 	if (start >= s_len)
-		return (ft_strdup(""));
+		return ("");
 	if (len > s_len - start)
 		len = s_len - start;
 	res = (char *)malloc((len + 1) * sizeof(char));
@@ -199,7 +185,7 @@ int	main(int argc, char **argv)
 	}
 
 	str = get_next_line(fd);
-	while ((str == get_next_line(fd)))
+	while ((str = get_next_line(fd)))
 	{
 		printf("%s", str);
 		free(str);
