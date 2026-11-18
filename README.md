@@ -4,7 +4,7 @@
 
 ## Description
 
-This project is the creation of an iterator: a function that reads a file descriptor and returns us the next line every time we call it on the same file descriptor.
+This project is the creation of an iterator: a function that reads a file descriptor and returns the next line every time we call it on the same file descriptor.
 
 ## Instructions
 
@@ -23,7 +23,7 @@ cc -Wall -Wextra -Werror -g -D BUFFER_SIZE=2 main.c
 ```
 
 > [!NOTE]
-> Change *BUFFER_SIZE* to verify the behavior of the function depending on it
+> Change *BUFFER_SIZE* to verify the behavior of the function stays the same
 
 3. Use the generated executable
 ```bash
@@ -40,10 +40,34 @@ cc -Wall -Wextra -Werror -g -D BUFFER_SIZE=2 main.c
 
 The idea is to use a *static variable* to keep the necessary context between two calls to the `get_next_line` function.
 
-> [!NOTE]
 > A static variable keeps its value between two calls to the function containing it
 
-We need to return the next file from the **file descriptor** (**fd**) at each call, for that we will read the **fd** by chunks of size *BUFFER_SIZE*, then return up to the *newline character* (`\n`) and keep the rest of the line in the static variable for the next call to use.
+**Instructions**
+We need to return the next file from the **file descriptor** (**fd**) at each call
+
+**Method**
+We will read the **fd** by chunks of size *BUFFER_SIZE* until we have a *newline character* (`\n`), then return up to it and keep the rest of the line in the static variable for the next call to use.
+
+```mermaid
+flowchart TD
+	fd(["fd (stdin, file...)"])
+	get_next_line["get_next_line"]
+	buffer["buffer"]
+	stash["stash"]
+	buffer_contains_newline["Does buffer contain newline?"]
+	return_to_newline["Return up to newline"]
+	store_rest["Store the rest after newline in stash"]
+
+	fd --> get_next_line
+	get_next_line -- read a chunk of size BUFFER_SIZE from fd --> buffer
+	buffer --> buffer_contains_newline
+	buffer_contains_newline -- no --> buffer
+	buffer_contains_newline -- yes --> return_to_newline
+	return_to_newline --> store_rest
+	store_rest --> stash
+
+	stash -- at the start of the call --> buffer
+```
 
 **Known limitations**
 
@@ -53,8 +77,8 @@ We need to return the next file from the **file descriptor** (**fd**) at each ca
 
 ## Resources
 
-I used AI to verify edge cases on my program, and a little bit to restructure after my terrible design decisions.
+I used AI to verify edge cases on my program, and a little bit to restructure it after my terrible design decisions.
 
 An unsorted list of useful websites and articles
 
--[Static variables in C](https://www.geeksforgeeks.org/c/static-variables-in-c)
+- [Static variables in C](https://www.geeksforgeeks.org/c/static-variables-in-c)
