@@ -43,9 +43,11 @@ The idea is to use a *static variable* to keep the necessary context between two
 > A static variable keeps its value between two calls to the function containing it
 
 **Instructions**
+
 We need to return the next file from the **file descriptor** (**fd**) at each call
 
 **Method**
+
 We will read the **fd** by chunks of size *BUFFER_SIZE* until we have a *newline character* (`\n`), then return up to it and keep the rest of the line in the static variable for the next call to use.
 
 ```mermaid
