@@ -60,18 +60,9 @@ char    *ft_strjoin(char const *s1, char const *s2)
 	res = (char *)malloc((size_s1 + size_s2 + 1) * sizeof(char));
 	if (!res)
 		return (NULL);
-	// ft_memcpy(res, s1, size_s1);
-	// int	i;
-
-	// i = 0;
-	// while (i < size_s1)
-	// {
-	// 	*res = *s1;
-	// 	i++;
-	// }
+	ft_memcpy(res, s1, size_s1);
 	ft_memcpy(res + size_s1, s2, size_s2);
 	res[size_s1 + size_s2] = '\0';
-	// free(s1);
 	return (res);
 }
 
@@ -103,7 +94,7 @@ char    *ft_substr(char const *s, unsigned int start, size_t len)
 		return (NULL);
 	s_len = ft_strlen(s);
 	if (start >= s_len)
-		return ("");
+    len = 0;
 	if (len > s_len - start)
 		len = s_len - start;
 	res = (char *)malloc((len + 1) * sizeof(char));
@@ -144,6 +135,7 @@ char	*get_next_line(int fd)
 	char		*buffer;
 	int			byte_read;
 	char		*tmp;
+  char    *line;
 
 	buffer = (char *)malloc(BUFFER_SIZE + 1);
 	if (!buffer)
@@ -156,15 +148,29 @@ char	*get_next_line(int fd)
 		{
 			free(buffer);
 			free(stash);
+      stash = NULL;
 			return (NULL);
 		}
 		buffer[byte_read] = '\0';
-		stash = ft_strjoin((const char *)stash, (const char *)buffer);
+    tmp = ft_strjoin((const char *)stash, (const char *)buffer);
+    free(stash);
+		stash = tmp;
 	}
-	free(buffer);
-	tmp = ft_substr(stash, 0, ft_index_of(stash, '\n') + 1);
-	stash = ft_substr(stash, ft_index_of(stash, '\n') + 1, ft_strlen(stash) - ft_strlen(tmp));
-	return (tmp);
+  free(buffer);
+  if (!stash)
+  {
+    free(stash);
+    stash = NULL;
+    return (NULL);
+  }
+  byte_read = ft_index_of(stash, '\n');
+  if (byte_read == -1)
+    byte_read = ft_strlen(stash) - 1;
+	line = ft_substr(stash, 0, byte_read + 1);
+	tmp = ft_substr(stash, byte_read + 1, ft_strlen(stash));
+  free(stash);
+  stash = tmp;
+	return (line);
 }
 
 int	main(int argc, char **argv)
@@ -184,7 +190,6 @@ int	main(int argc, char **argv)
 		}
 	}
 
-	str = get_next_line(fd);
 	while ((str = get_next_line(fd)))
 	{
 		printf("%s", str);
