@@ -6,113 +6,19 @@
 /*   By: tdefeche <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/13 10:46:15 by tdefeche          #+#    #+#             */
-/*   Updated: 2026/11/18 10:04:11 by tdefeche         ###   ########.fr       */
+/*   Updated: 2026/11/18 11:46:18 by tdefeche         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
-#include <stdio.h>
 
 #include "get_next_line.h"
 
-///// START HELP
-size_t  ft_strlen(const char *s)
-{
-	size_t  i;
-
-	if (!s)
-		return (0);
-	i = 0;
-	while (s[i])
-		i++;
-	return (i);
-}
-
-void    *ft_memcpy(void *dest, const void *src, size_t n)
-{
-	size_t                          i;
-	unsigned char           *d;
-	const unsigned char     *s;
-
-	i = 0;
-	d = (unsigned char *)dest;
-	s = (const unsigned char *)src;
-	while (i < n)
-	{
-		*d = *s;
-		d++;
-		s++;
-		i++;
-	}
-	return (dest);
-}
-
-char    *ft_strjoin(char const *s1, char const *s2)
-{
-	int             size_s1;
-	int             size_s2;
-	char    *res;
-
-	size_s1 = ft_strlen(s1);
-	size_s2 = ft_strlen(s2);
-	res = (char *)malloc((size_s1 + size_s2 + 1) * sizeof(char));
-	if (!res)
-		return (NULL);
-	ft_memcpy(res, s1, size_s1);
-	ft_memcpy(res + size_s1, s2, size_s2);
-	res[size_s1 + size_s2] = '\0';
-	return (res);
-}
-
-char    *ft_strchr(const char *s, int c)
-{
-	int     index;
-
-	index = 0;
-	if (!s)
-		return (NULL);
-	while (1 == 1)
-	{
-		if (s[index] == (char)c)
-			return ((char *)&(s[index]));
-		if (s[index] == '\0')
-			break ;
-		index++;
-	}
-	return (NULL);
-}
-
-char    *ft_substr(char const *s, unsigned int start, size_t len)
-{
-	char    *res;
-	size_t  i;
-	size_t  s_len;
-
-	if (!s)
-		return (NULL);
-	s_len = ft_strlen(s);
-	if (start >= s_len)
-		len = 0;
-	if (len > s_len - start)
-		len = s_len - start;
-	res = (char *)malloc((len + 1) * sizeof(char));
-	if (!res)
-		return (NULL);
-	i = 0;
-	while (i < len)
-	{
-		res[i] = s[start + i];
-		i++;
-	}
-	res[i] = '\0';
-	return (res);
-}
-
 int	ft_index_of(const char *s, int c)
 {
-	int     index;
+	int	index;
 
 	index = 0;
 	if (!s)
@@ -127,19 +33,12 @@ int	ft_index_of(const char *s, int c)
 	}
 	return (-1);
 }
-//// END HELP
 
-char	*get_next_line(int fd)
+char	*fill_buffer(char *buffer, char *stash, int fd)
 {
-	static char	*stash;
-	char		*buffer;
-	int			byte_read;
-	char		*tmp;
-	char    	*line;
+	char	*tmp;
+	int		byte_read;
 
-	buffer = (char *)malloc(BUFFER_SIZE + 1);
-	if (!buffer)
-		return (NULL);
 	byte_read = 1;
 	while (!ft_strchr(stash, '\n') && byte_read > 0)
 	{
@@ -156,6 +55,21 @@ char	*get_next_line(int fd)
 		free(stash);
 		stash = tmp;
 	}
+	return (stash);
+}
+
+char	*get_next_line(int fd)
+{
+	static char	*stash;
+	char		*buffer;
+	int			byte_read;
+	char		*line;
+	char		*tmp;
+
+	buffer = (char *)malloc(BUFFER_SIZE + 1);
+	if (!buffer)
+		return (NULL);
+	stash = fill_buffer(buffer, stash, fd);
 	free(buffer);
 	if (!stash)
 	{
@@ -173,6 +87,7 @@ char	*get_next_line(int fd)
 	return (line);
 }
 
+#include <stdio.h>
 int	main(int argc, char **argv)
 {
 	int 	fd;
@@ -189,14 +104,12 @@ int	main(int argc, char **argv)
 			return (1);
 		}
 	}
-
 	while ((str = get_next_line(fd)))
 	{
 		printf("%s", str);
 		free(str);
 		sleep(1);
 	}
-
 	close(fd);
 	return (0);
 }
