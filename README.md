@@ -17,9 +17,9 @@ git clone -depth 1 https://github.com/zivoxRoot/ft_get_next_line.git
 cd ft_get_next_line
 ```
 
-2. Compile the program
+2. Compile the program with a custom `main.c` file
 ```bash
-cc -Wall -Wextra -Werror -g -D BUFFER_SIZE=2 main.c
+cc -Wall -Wextra -Werror -g -D BUFFER_SIZE=2 get_next_line.c get_next_line_utils.c main.c
 ```
 
 > [!NOTE]
@@ -84,3 +84,44 @@ I used AI to verify edge cases on my program, and a little bit to restructure it
 An unsorted list of useful websites and articles
 
 - [Static variables in C](https://www.geeksforgeeks.org/c/static-variables-in-c)
+
+## Testing
+
+You can copy this main file to test the program:
+
+> [!NOTE]
+> Then use the command at step 2 of the [instruction section](#instructions)
+
+<details>
+<summary><code>main.c</code></summary>
+
+```c
+#include <stdio.h>
+int	main(int argc, char **argv)
+{
+	int 	fd;
+	char	*str;
+
+	if (argc == 1)
+		fd = 0;
+	else
+	{
+		fd = open(argv[1], O_RDONLY);
+		if (fd < 0)
+		{
+			printf("Error opening file\n");
+			return (1);
+		}
+	}
+	while ((str = get_next_line(fd)))
+	{
+		printf("%s", str);
+		free(str);
+		sleep(1);
+	}
+	close(fd);
+	return (0);
+}
+```
+
+</details>

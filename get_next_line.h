@@ -27,4 +27,4 @@ char	*ft_substr(char const *s, unsigned int start, size_t len);
 int		ft_index_of(const char *s, int c);
 char	*fill_buffer(char *buffer, char *stash, int fd);
 
-# endif  // GET_NEXT_LINE_H
+#endif  // GET_NEXT_LINE_H

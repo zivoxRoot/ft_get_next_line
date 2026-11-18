@@ -91,7 +91,7 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	s_len = ft_strlen(s);
 	if (start >= s_len)
 		len = 0;
-	if (len > s_len - start)
+	else if (len > s_len - start)
 		len = s_len - start;
 	res = (char *)malloc((len + 1) * sizeof(char));
 	if (!res)

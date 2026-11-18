@@ -45,9 +45,7 @@ char	*fill_buffer(char *buffer, char *stash, int fd)
 		byte_read = read(fd, buffer, BUFFER_SIZE);
 		if (byte_read == -1)
 		{
-			free(buffer);
 			free(stash);
-			stash = NULL;
 			return (NULL);
 		}
 		buffer[byte_read] = '\0';
@@ -62,7 +60,7 @@ char	*get_next_line(int fd)
 {
 	static char	*stash;
 	char		*buffer;
-	int			byte_read;
+	int			end;
 	char		*line;
 	char		*tmp;
 
@@ -71,45 +69,18 @@ char	*get_next_line(int fd)
 		return (NULL);
 	stash = fill_buffer(buffer, stash, fd);
 	free(buffer);
-	if (!stash)
+	if (!stash || !*stash)
 	{
 		free(stash);
 		stash = NULL;
 		return (NULL);
 	}
-	byte_read = ft_index_of(stash, '\n');
-	if (byte_read == -1)
-		byte_read = ft_strlen(stash) - 1;
-	line = ft_substr(stash, 0, byte_read + 1);
-	tmp = ft_substr(stash, byte_read + 1, ft_strlen(stash));
+	end = ft_index_of(stash, '\n');
+	if (end == -1)
+		end = ft_strlen(stash) - 1;
+	line = ft_substr(stash, 0, end + 1);
+	tmp = ft_substr(stash, end + 1, ft_strlen(stash));
 	free(stash);
 	stash = tmp;
 	return (line);
-}
-
-#include <stdio.h>
-int	main(int argc, char **argv)
-{
-	int 	fd;
-	char	*str;
-
-	if (argc == 1)
-		fd = 0;
-	else
-	{
-		fd = open(argv[1], O_RDONLY);
-		if (fd < 0)
-		{
-			printf("Error opening file\n");
-			return (1);
-		}
-	}
-	while ((str = get_next_line(fd)))
-	{
-		printf("%s", str);
-		free(str);
-		sleep(1);
-	}
-	close(fd);
-	return (0);
 }
