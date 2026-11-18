@@ -22,6 +22,9 @@ cd ft_get_next_line
 cc -Wall -Wextra -Werror -g -D BUFFER_SIZE=2 main.c
 ```
 
+> [!NOTE]
+> Change *BUFFER_SIZE* to verify the behavior of the function depending on it
+
 3. Use the generated executable
 ```bash
 ./a.out  # Use stdin as the file descriptor
@@ -35,12 +38,23 @@ cc -Wall -Wextra -Werror -g -D BUFFER_SIZE=2 main.c
 
 </summary>
 
+The idea is to use a *static variable* to keep the necessary context between two calls to the `get_next_line` function.
+
+> [!NOTE]
+> A static variable keeps its value between two calls to the function containing it
+
+We need to return the next file from the **file descriptor** (**fd**) at each call, for that we will read the **fd** by chunks of size *BUFFER_SIZE*, then return up to the *newline character* (`\n`) and keep the rest of the line in the static variable for the next call to use.
+
+**Known limitations**
+
+- I didn't do the bonus of handling multiple file descriptor, so if the function is called multiple times but passing in different **fd**s it will have undefined behaviors
+
 </details>
 
 ## Resources
 
-I used AI to... TODO
+I used AI to verify edge cases on my program, and a little bit to restructure after my terrible design decisions.
 
 An unsorted list of useful websites and articles
 
-- TODO
+-[Static variables in C](https://www.geeksforgeeks.org/c/static-variables-in-c)
