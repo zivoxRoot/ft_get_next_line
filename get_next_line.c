@@ -6,7 +6,7 @@
 /*   By: tdefeche <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/13 10:46:15 by tdefeche          #+#    #+#             */
-/*   Updated: 2026/11/16 09:41:16 by tdefeche         ###   ########.fr       */
+/*   Updated: 2026/11/18 10:04:11 by tdefeche         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 
 #include "get_next_line.h"
 
-///// HELP
+///// START HELP
 size_t  ft_strlen(const char *s)
 {
 	size_t  i;
@@ -94,7 +94,7 @@ char    *ft_substr(char const *s, unsigned int start, size_t len)
 		return (NULL);
 	s_len = ft_strlen(s);
 	if (start >= s_len)
-    len = 0;
+		len = 0;
 	if (len > s_len - start)
 		len = s_len - start;
 	res = (char *)malloc((len + 1) * sizeof(char));
@@ -135,7 +135,7 @@ char	*get_next_line(int fd)
 	char		*buffer;
 	int			byte_read;
 	char		*tmp;
-  char    *line;
+	char    	*line;
 
 	buffer = (char *)malloc(BUFFER_SIZE + 1);
 	if (!buffer)
@@ -148,28 +148,28 @@ char	*get_next_line(int fd)
 		{
 			free(buffer);
 			free(stash);
-      stash = NULL;
+			stash = NULL;
 			return (NULL);
 		}
 		buffer[byte_read] = '\0';
-    tmp = ft_strjoin((const char *)stash, (const char *)buffer);
-    free(stash);
+		tmp = ft_strjoin((const char *)stash, (const char *)buffer);
+		free(stash);
 		stash = tmp;
 	}
-  free(buffer);
-  if (!stash)
-  {
-    free(stash);
-    stash = NULL;
-    return (NULL);
-  }
-  byte_read = ft_index_of(stash, '\n');
-  if (byte_read == -1)
-    byte_read = ft_strlen(stash) - 1;
+	free(buffer);
+	if (!stash)
+	{
+		free(stash);
+		stash = NULL;
+		return (NULL);
+	}
+	byte_read = ft_index_of(stash, '\n');
+	if (byte_read == -1)
+		byte_read = ft_strlen(stash) - 1;
 	line = ft_substr(stash, 0, byte_read + 1);
 	tmp = ft_substr(stash, byte_read + 1, ft_strlen(stash));
-  free(stash);
-  stash = tmp;
+	free(stash);
+	stash = tmp;
 	return (line);
 }
 
