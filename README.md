@@ -13,7 +13,7 @@ This project is the creation of an iterator: a function that reads a file descri
 
 1. Clone the repository
 ```bash
-git clone -depth 1 https://github.com/zivoxRoot/ft_get_next_line.git
+git clone --depth 1 https://github.com/zivoxRoot/ft_get_next_line.git
 cd ft_get_next_line
 ```
 
