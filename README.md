@@ -53,33 +53,20 @@ We will read the **fd** by chunks of size *BUFFER_SIZE* until we have a *newline
 ```mermaid
 flowchart TD
 	start(["get_next_line(fd)"])
-
-	subgraph fill_buffer
-		check{"stash contains a newline?"}
-		read["bytes = read(fd, buffer, BUFFER_SIZE)"]
-		status{"bytes?"}
-		join["stash = stash + buffer"]
-	end
-
-	empty{"stash empty?"}
-	extract["line = stash up to and including the newline<br/>(or the whole stash if there is none)"]
-	keep["stash = what remains after the line"]
-	free_err["free stash"]
+	check{"stash contains a newline?"}
+	read["read BUFFER_SIZE bytes from fd"]
+	join["append them to stash"]
+	eof{"end of file?"}
+	extract["take the line out of stash"]
+	keep["keep the rest in stash"]
 	ret(["return line"])
-	null(["return NULL"])
 
 	start --> check
-	check -- no --> read
-	read --> status
-	status -- "> 0" --> join
-	join --> check
-	status -- "0 (EOF)" --> empty
-	status -- "-1 (error)" --> free_err --> null
+	check -- no --> read --> eof
+	eof -- no --> join --> check
+	eof -- yes --> extract
 	check -- yes --> extract
-	empty -- yes --> null
-	empty -- no --> extract
 	extract --> keep --> ret
-	keep -. "stash is static: kept for the next call" .-> start
 ```
 
 **Known limitations**
