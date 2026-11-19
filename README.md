@@ -109,6 +109,12 @@ You can copy this main file to test the program:
 
 ```c
 #include <stdio.h>
+#include <stdlib.h>
+#include <fcntl.h>
+#include <unistd.h>
+
+#include "get_next_line.h"
+
 int	main(int argc, char **argv)
 {
 	int 	fd;
