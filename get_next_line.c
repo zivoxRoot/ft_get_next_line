@@ -6,7 +6,7 @@
 /*   By: tdefeche <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/13 10:46:15 by tdefeche          #+#    #+#             */
-/*   Updated: 2026/11/18 11:46:18 by tdefeche         ###   ########.fr       */
+/*   Updated: 2026/11/20 09:37:39 by tdefeche         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,44 +34,44 @@ int	ft_index_of(const char *s, int c)
 	return (-1);
 }
 
-static char *append(char *acc, const char *buf, size_t *len, size_t *cap)
+static char	*append(char *stash, const char *buffer, size_t *len, size_t *s_cap)
 {
-  char    *bigger;
-  size_t  n;
+	char	*bigger;
+	size_t	n;
 
-  n = ft_strlen(buf);
-  if (*len + n + 1 > *cap)
-  {
-    *cap = (*len + n + 1) * 2;
-    bigger = (char *)malloc(*cap);
-    if (!bigger)
-    {
-      free(acc);
-      return (NULL);
-    }
-    ft_memcpy(bigger, acc, *len);
-    free(acc);
-    acc = bigger;
-  }
-  ft_memcpy(acc + *len, buf, n);
-  *len += n;
-  acc[*len] = '\0';
-  return (acc);
+	n = ft_strlen(buffer);
+	if (*len + n + 1 > *s_cap)
+	{
+		*s_cap = (*len + n + 1) * 2;
+		bigger = (char *)malloc(*s_cap);
+		if (!bigger)
+		{
+			free(stash);
+			return (NULL);
+		}
+		ft_memcpy(bigger, stash, *len);
+		free(stash);
+		stash = bigger;
+	}
+	ft_memcpy(stash + *len, buffer, n);
+	*len += n;
+	stash[*len] = '\0';
+	return (stash);
 }
 
 char	*fill_buffer(char *buffer, char *stash, int fd)
 {
-  size_t  len;
-  size_t  cap;
-  int     byte_read;
+	size_t  len;
+	size_t  cap;
+	int     byte_read;
 
-  if (ft_strchr(stash, '\n'))
-      return (stash);
-  len = ft_strlen(stash);
-  cap = 0;
-  if (stash)
-    cap = len + 1;
-  byte_read = 1;
+	if (ft_strchr(stash, '\n'))
+		return (stash);
+	len = ft_strlen(stash);
+	cap = 0;
+	if (stash)
+		cap = len + 1;
+	byte_read = 1;
 	while (byte_read > 0)
 	{
 		byte_read = read(fd, buffer, BUFFER_SIZE);
@@ -81,9 +81,9 @@ char	*fill_buffer(char *buffer, char *stash, int fd)
 			return (NULL);
 		}
 		buffer[byte_read] = '\0';
-    stash = append(stash, buffer, &len, &cap);
-    if (!stash || ft_strchr(buffer, '\n'))
-      break ;
+		stash = append(stash, buffer, &len, &cap);
+		if (!stash || ft_strchr(buffer, '\n'))
+			break ;
 	}
 	return (stash);
 }
