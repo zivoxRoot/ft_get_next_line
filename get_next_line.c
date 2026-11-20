@@ -6,7 +6,7 @@
 /*   By: tdefeche <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/13 10:46:15 by tdefeche          #+#    #+#             */
-/*   Updated: 2026/11/20 09:37:39 by tdefeche         ###   ########.fr       */
+/*   Updated: 2026/11/20 09:46:11 by tdefeche         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,9 +61,9 @@ static char	*append(char *stash, const char *buffer, size_t *len, size_t *s_cap)
 
 char	*fill_buffer(char *buffer, char *stash, int fd)
 {
-	size_t  len;
-	size_t  cap;
-	int     byte_read;
+	size_t	len;
+	size_t	cap;
+	int		byte_read;
 
 	if (ft_strchr(stash, '\n'))
 		return (stash);
