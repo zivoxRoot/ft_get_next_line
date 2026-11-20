@@ -80,7 +80,7 @@ flowchart TD
 I used AI to: 
 - verify edge cases on my program
 - a little bit to restructure my code organisation after my terrible design decisions
-- and to finish the mermaid diagram as I still have troubles with this
+- and debug a timeout issues with long files and BUFFER_SIZE of 1
 
 A useful website about [static variables in C](https://www.geeksforgeeks.org/c/static-variables-in-c)
 
